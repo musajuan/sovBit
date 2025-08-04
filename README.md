@@ -1,64 +1,87 @@
 # sovBit DAO Smart Contract
 
-A decentralized autonomous organization (DAO) platform built with Clarity for Stacks blockchain. This contract enables the creation and management of DAOs, membership, proposals, voting, and treasury operations.
+A decentralized autonomous organization (DAO) platform built with Clarity for Stacks blockchain, featuring enhanced governance and multi-signature treasury management.
 
 ---
 
 ## Features
 
-- **DAO Creation:** Anyone can create a DAO with a name and initial token supply.
-- **Membership & Tokens:** DAO tokens represent membership and voting power. Members can transfer tokens to others.
-- **Proposals:** Members can submit proposals, vote (weighted by token balance), and execute proposals if passed.
-- **Treasury:** DAOs have a treasury for STX deposits and withdrawals (admin only).
-- **Read-Only Queries:** Fetch DAO, proposal, treasury, and voting data.
+- **Enhanced DAO Creation:** Create DAOs with configurable governance parameters
+- **Role-Based Access Control:** Admin, Treasurer, and Member roles
+- **Advanced Proposals:** Time-based voting periods with quorum requirements
+- **Multi-Signature Treasury:** Configurable withdrawal limits and signature requirements
+- **Emergency Controls:** Special handling for large withdrawals
+- **Enhanced Governance:** Proposal states tracking and automated execution
+- **Backward Compatibility:** Maintains support for legacy proposal functions
 
 ---
 
 ## Contract Overview
 
-### Constants
+### Enhanced Governance Constants
 
-Error codes for common failure scenarios (e.g., not a member, insufficient balance, already voted).
+- `VOTING_PERIOD`: 24 hours (144 blocks)
+- `EXECUTION_WINDOW`: 7 days (1008 blocks)
+- `MIN_QUORUM_PERCENTAGE`: 20% minimum participation
+- Role definitions: `ROLE_ADMIN`, `ROLE_TREASURER`, `ROLE_MEMBER`
 
-### Data Maps
+### New Data Maps
 
-- `daos`: DAO metadata (name, admin, member count, token supply)
-- `dao-members`: Member token balances per DAO
-- `proposals`: DAO proposals (title, description, creator, votes, executed status)
-- `proposal-votes`: Tracks member votes on proposals
-- `dao-treasury`: DAO treasury balances
+- `enhanced-proposals`: Extended proposal data with timing and type information
+- `treasury-config`: Multi-signature settings and withdrawal limits
+- `member-roles`: Role assignments and tracking
+- `pending-transactions`: Multi-signature transaction queue
+- `transaction-signatures`: Signature tracking
+- `daily-withdrawals`: Daily withdrawal limits tracking
 
-### Public Functions
+### New Public Functions
 
-- `create-dao(name, initial-token-supply)`: Create a new DAO
-- `transfer-token(dao-id, to, amount)`: Transfer DAO tokens to another member
-- `submit-proposal(dao-id, title, description)`: Submit a proposal to a DAO
-- `vote-proposal(dao-id, proposal-id, support)`: Vote on a proposal
-- `execute-proposal(dao-id, proposal-id)`: Execute a proposal if passed
-- `deposit-treasury(dao-id, amount)`: Deposit STX into DAO treasury
-- `withdraw-treasury(dao-id, amount, to)`: Withdraw STX from DAO treasury (admin only)
+- **Treasury Management**
+  - `setup-treasury-config`: Configure treasury parameters
+  - `assign-role`: Manage member roles
+  - `request-withdrawal`: Initiate multi-sig withdrawal
+  - `sign-transaction`: Approve pending transactions
 
-### Read-Only Functions
+- **Enhanced Governance**
+  - `submit-enhanced-proposal`: Create proposals with types and targets
+  - `vote-enhanced-proposal`: Time-aware voting with weight
+  - `execute-enhanced-proposal`: Auto-execution with state checks
+  - `get-proposal-state`: Track proposal lifecycle
 
-- `get-dao(dao-id)`: Get DAO metadata
-- `get-balance(dao-id, user)`: Get member's token balance
-- `get-proposal(dao-id, proposal-id)`: Get proposal details
-- `get-treasury(dao-id)`: Get DAO treasury balance
-- `get-vote(dao-id, proposal-id, voter)`: Get a member's vote on a proposal
-- `has-voted(dao-id, proposal-id, voter)`: Check if a member has voted
-- `get-next-dao-id()`: Get next DAO ID
-- `get-next-proposal-id()`: Get next proposal ID
+### New Read-Only Functions
+
+- `get-member-role`: Check member's role
+- `get-daily-withdrawn`: Track daily withdrawals
+- `get-pending-transaction`: View transaction details
+- `has-signed-transaction`: Check signature status
+- `get-enhanced-proposal`: View enhanced proposal details
+- `get-treasury-config`: View treasury settings
 
 ---
 
 ## Usage
 
-1. **Deploy the contract** to the Stacks blockchain.
-2. **Create a DAO** using `create-dao`.
-3. **Transfer tokens** to onboard new members.
-4. **Submit proposals** and **vote** on them.
-5. **Execute proposals** if they pass.
-6. **Manage treasury** with deposits and withdrawals.
+1. **Deploy and Configure**
+   - Deploy contract
+   - Setup treasury configuration
+   - Assign roles to members
+
+2. **DAO Operations**
+   - Create DAO with initial settings
+   - Manage membership through token transfers
+   - Submit and vote on proposals
+
+3. **Treasury Management**
+   - Configure withdrawal limits
+   - Submit withdrawal requests
+   - Collect required signatures
+   - Monitor daily limits
+
+4. **Governance**
+   - Create typed proposals
+   - Vote within time windows
+   - Monitor quorum requirements
+   - Execute passed proposals
 
 ---
 
@@ -67,6 +90,18 @@ Error codes for common failure scenarios (e.g., not a member, insufficient balan
 - **Language:** Clarity
 - **Platform:** Stacks Blockchain
 - **File:** sovBit.clar
+
+---
+
+## Security Features
+
+- Time-based voting periods
+- Quorum requirements
+- Multi-signature controls
+- Daily withdrawal limits
+- Emergency procedures for large transactions
+- Role-based access control
+- Input validation and safety checks
 
 ---
 
